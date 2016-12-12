@@ -1,0 +1,30 @@
+{
+  "name": "spider",
+  "version": "1.0.0",
+  "description": "广东政府采购爬虫",
+  "main": "index.js",
+  "scripts": {
+    "test": "istanbul cover _mocha -- --timeout 20000 --opts test/mocha.opts 'test/**/*-spec.js'",
+    "test:watch": "istanbul cover _mocha -- -w --opts test/mocha.opts 'test/**/*-spec.js'",
+    "test:one": "istanbul cover _mocha -- --opts test/mocha.opts"
+  },
+  "author": "hugohua",
+  "license": "ISC",
+  "dependencies": {
+    "co": "^4.6.0",
+    "debug": "^2.3.3",
+    "exceljs": "^0.2.37",
+    "lodash": "^4.17.2",
+    "node-crawler": "git@github.com:bda-research/node-crawler.git#1.0.0-beta"
+  },
+  "devDependencies": {
+    "@ali/ci-log": "~0.1.2",
+    "chai": "^3.5.0",
+    "eslint": "^3.6.0",
+    "istanbul": "^0.4.4",
+    "mocha": "^3.1.2",
+    "mocha-bamboo-reporter": "^1.1.1",
+    "sinon": "^1.17.4",
+    "supertest": "^2.0.1"
+  }
+}
