@@ -6,3 +6,4 @@ eslint.json
 coverage
 # eslint reports
 eslint.json
+node_modules
