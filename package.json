@@ -4,7 +4,7 @@
   "description": "广东政府采购爬虫",
   "main": "index.js",
   "scripts": {
-    "start" : "node index.js",
+    "start": "node index.js",
     "test": "istanbul cover _mocha -- --timeout 20000 --opts test/mocha.opts 'test/**/*-spec.js'",
     "test:watch": "istanbul cover _mocha -- -w --opts test/mocha.opts 'test/**/*-spec.js'",
     "test:one": "istanbul cover _mocha -- --opts test/mocha.opts",
@@ -22,7 +22,8 @@
     "exceljs": "^0.2.37",
     "fie-log": "^1.3.1",
     "lodash": "^4.17.2",
-    "log": "^1.4.0"
+    "log": "^1.4.0",
+    "request": "^2.79.0"
   },
   "devDependencies": {
     "@ali/ci-log": "~0.1.2",

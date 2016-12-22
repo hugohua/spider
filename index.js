@@ -20,12 +20,15 @@ co(function* () {
 
   const tableHeader = [
 		{ header: '商品', key: 'title', width : 100 },
+    { header: '电商平台', key: 'platform', width : 20 },
 		{ header: '序号', key: 'buyingNum', width : 15 },
 		{ header: '采购单位', key: 'buyingUnit', width : 20 },
 		{ header: '数量', key: 'buyQuantity', width : 15 },
 		{ header: '单价', key: 'buyingPrice', width : 15 },
 		{ header: '电商', key: 'buyingUser', width : 20 },
-		{ header: '采购时间', key: 'buyingDate', width : 15 }
+		{ header: '采购时间', key: 'buyingDate', width : 15 },
+    { header: 'URL', key: 'url', width : 60 }
+
   ];
 
 	//TODO 抓取列表页
@@ -33,6 +36,14 @@ co(function* () {
     'http://112.74.98.194/commodities/15367?p_id=16150',
     'http://112.74.98.194/commodities/24285?p_id=25617'
   ]);
+
+  //for(let i in urls){
+  //  let cate = config.cate[i];
+  //  log.info(`--> 开始抓取 ${cate} 类目....`);
+  //  const data = yield details.get(urls[i]);
+  //  excel.addWorksheet(cate, tableHeader, data);
+  //  log.success(`--> 成功抓取 ${cate} 类目下的${data.length}条数据....`)
+  //}
 
   excel.addWorksheet('台式机', tableHeader, data);
   excel.save('data/file2.xlsx', () => {
