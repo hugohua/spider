@@ -7,3 +7,4 @@ coverage
 # eslint reports
 eslint.json
 node_modules
+npm-debug.log
