@@ -86,9 +86,9 @@ co(function* () {
 
   ];
 
-  const data = yield details.get(urls['177']);
+  const data = yield details.get(urls['178']);
 
-  const file = path.join(__dirname, '../data/177.json');
+  const file = path.join(__dirname, '../data/178.json');
   // 写入project文件
   yield fs.outputJson(file, data);
 
