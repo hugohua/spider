@@ -1,8 +1,11 @@
 {
   "name": "hugo-spider-zf",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "广东政府采购爬虫",
   "main": "index.js",
+  "bin" : {
+    "ai" : "./bin/ai.js"
+  },
   "scripts": {
     "start": "node index.js",
     "test": "istanbul cover _mocha -- --timeout 20000 --opts test/mocha.opts 'test/**/*-spec.js'",

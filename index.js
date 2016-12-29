@@ -2,6 +2,7 @@
 /**
  * Created by hugo on 16/12/18.
  * 获取商品详情内容
+ * http://enclose.alipay.net/packages/hugo-spider-zf
  */
 
 'use strict';
