@@ -12,16 +12,26 @@ const co = require('co');
 const path = require('path');
 const log = require('fie-log')('spider');
 const fs = require('co-fs-extra');
+const home = require('os-homedir')();
 const inquirer = require('inquirer');
 const Excel = require('./lib/excel');
 const details = require('./lib/details');
 const Desktop = require('./lib/desktop');
 const config = require('./lib/config');
-const urls = require('./data/urls.json');
+const list = require('./lib/list');
+
+
+let urls = [];
+const filePath = path.join(home,'spider');
+
+
 /**
  * 导出通用类目
  */
-function* exportOther() {
+function* exportOther(cate) {
+
+	yield urls = yield list.get(cate);
+
 	const excel = new Excel();
 
 	const tableHeader = [
@@ -47,16 +57,20 @@ function* exportOther() {
 	}
 
   return new Promise((resolve, reject) => {
-    excel.save('data/file2.xlsx', () => {
-      resolve();
-    });
+		const file = path.join(filePath, Date.now() + '.xlsx' );
+		excel.save( file , () => {
+			log.success(`已成功保存至 -> ${file}` );
+			resolve();
+		});
   });
 }
 
 /**
  * 导出台式机和笔记本
  */
-function* exportComputer() {
+function* exportComputer(cate) {
+
+	yield urls = yield list.get(cate);
 
 	const excel = new Excel();
 
@@ -82,9 +96,6 @@ function* exportComputer() {
 
 	];
 
-	const urlComputer = ['177','178'];
-
-
 	//debug
 	// let data = yield details.get([
 	// 	'http://112.74.98.194/commodities/24141?p_id=25473'
@@ -96,11 +107,11 @@ function* exportComputer() {
 	// excel.addWorksheet('台式机', tableHeader, data);
 	// log.success(`--> 成功抓取 台式机 类目下的${data.length}条数据....`)
 
-	for(let i in urlComputer){
-	  const url = urlComputer[i];
-	  let cate = config.cate[url];
+
+	for(let i in urls){
+	  let cate = config.cate[i];
 		log.info(`--> 开始抓取 ${cate} 类目....`);
-		let data = yield details.get(urls[url]);
+		let data = yield details.get(urls[i]);
 		data = data.map( item => {
 			const d = new Desktop(item.title);
 			return Object.assign({},item,d);
@@ -111,7 +122,9 @@ function* exportComputer() {
 	}
 
 	return new Promise((resolve, reject) => {
-		excel.save('data/file2.xlsx', () => {
+		const file = path.join(filePath, Date.now() + '.xlsx' );
+		excel.save( file , () => {
+			log.success(`已成功保存至 -> ${file}` )
 			resolve();
 		});
 	});
@@ -121,10 +134,24 @@ function* exportComputer() {
 
 co(function* () {
 
-	const choices = [
-		'台式机/笔记本类目',
-		'除了台式机/笔记本之外的所有类目'
-	];
+
+	yield fs.mkdirs( filePath );
+
+	const cateData = {
+		'计算机设备' : [177,178],
+		'服务器' : [ 174 ],
+		'交换机' : [ 175 ],
+		'网络设备' : [162,167,163,168],
+		'打印设备' : [ 179,180,181,182 ],
+		'办公设备' : [ 183,184,110, 115,185 ,186,140,111],
+		'电器设备' : [117,118,170],
+		'摄像机' : [ 149,150],
+		'照相机' : [ 151,152 ],
+		'办公用纸' : [ 147,123 ],
+		'办公自动化设备耗材' : [ 139,144,145,146 ]
+	};
+
+	const choices = Object.keys(cateData);
 
 	const answers = yield inquirer.prompt([
 		{
@@ -136,12 +163,11 @@ co(function* () {
 	]);
 
 	if(answers.use === choices[0]){
-		yield exportComputer();
-	}else if(answers.use === choices[1]){
-		yield exportOther();
+		yield exportComputer([177,178]);
+		return;
 	}
 
-
+	yield  exportOther(cateData[answers.use]);
 
 
 }).catch((e) => {
