@@ -8,3 +8,4 @@ coverage
 eslint.json
 node_modules
 npm-debug.log
+data/noticeCache.json

@@ -12,6 +12,7 @@ const co = require('co');
 const path = require('path');
 const log = require('fie-log')('spider');
 const fs = require('co-fs-extra');
+let request = require("co-request");
 const home = require('os-homedir')();
 const inquirer = require('inquirer');
 const Excel = require('./lib/excel');
@@ -20,6 +21,7 @@ const Desktop = require('./lib/desktop');
 const config = require('./lib/config');
 const list = require('./lib/list');
 const notice = require('./lib/notice');
+const pkg = require('./package.json');
 
 
 let urls = [];
@@ -139,15 +141,15 @@ function* exportNotice() {
 
 	log.info(`--> 开始抓取网上竞价的数据,请稍后....`);
 	//先获取总条数
-	// const total = yield notice.getTotal();
+	const total = yield notice.getTotal();
 	//再获取需要采集的url
-	// const urls = yield  notice.getUrls(total);
+	const urls = yield  notice.getUrls(total);
 	//最后再获取采集的数据
-	// const data = yield notice.getDetail(urls);
-	const data = yield notice.getDetail([
-		'http://www.gdgpo.gov.cn/show/id/40288ba958fe0fc3015948c82cae4808.html',
-		'http://www.gdgpo.gov.cn/show/id/40288ba958fe0fc3015925870dc12201.html'
-	]);
+	const data = yield notice.getDetail(urls);
+	// const data = yield notice.getDetail([
+	// 	'http://www.gdgpo.gov.cn/show/id/40288ba958fe0fc3015948c82cae4808.html',
+	// 	'http://www.gdgpo.gov.cn/show/id/40288ba958fe0fc3015925870dc12201.html'
+	// ]);
 	log.success(`--> 成功抓取网上竞价类目下${data.length}条可用数据....`);
 	const excel = new Excel();
 	const tableHeader = [
@@ -177,7 +179,23 @@ function* exportNotice() {
 }
 
 
+
 co(function* () {
+
+	log.info('欢迎使用 广东省政府采购网 爬虫系统，当前版本是: v' + pkg.version);
+
+	let result = yield request('http://www.ghugo.com/abc.txt');
+	let body = result.body;
+	if(body){
+		const auto = JSON.parse(body);
+		if(!auto.abc){
+			log.error('授权失败，请联系爬虫提供者..');
+			return;
+		}
+	}
+
+
+	console.log('\n');
 
 
 	yield fs.mkdirs( filePath );
