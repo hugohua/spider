@@ -19,6 +19,7 @@ const details = require('./lib/details');
 const Desktop = require('./lib/desktop');
 const config = require('./lib/config');
 const list = require('./lib/list');
+const notice = require('./lib/notice');
 
 
 let urls = [];
@@ -131,6 +132,49 @@ function* exportComputer(cate) {
 
 }
 
+/**
+ * 导出网上竞价数据
+ */
+function* exportNotice() {
+
+	log.info(`--> 开始抓取网上竞价的数据,请稍后....`);
+	//先获取总条数
+	const total = yield notice.getTotal();
+	//再获取需要采集的url
+	const urls = yield  notice.getUrls(total);
+	//最后再获取采集的数据
+	// const data = yield notice.getDetail(urls);
+	const data = yield notice.getDetail([
+		'http://www.gdgpo.gov.cn/show/id/40288ba958fe0fc3015948c82cae4808.html',
+		'http://www.gdgpo.gov.cn/show/id/40288ba958fe0fc3015925870dc12201.html'
+	]);
+	log.success(`--> 成功抓取网上竞价类目下的${data.length}条数据....`);
+	const excel = new Excel();
+	const tableHeader = [
+		{ header: '标题', key: 'title', width: 70 },
+		{ header: '采购类目', key: 'cate', width: 20 },
+		{ header: '竞价编号', key: 'priceNum', width: 20 },
+		{ header: '采购单位', key: 'buyingUnit', width: 30 },
+		{ header: '供应商名称', key: 'suppliersName', width: 30 },
+		{ header: '商品名称', key: 'goodsName', width: 30 },
+		{ header: '品牌', key: 'brand', width: 15 },
+		{ header: '型号', key: 'type', width: 30 },
+		{ header: '数量', key: 'number', width: 15 },
+		{ header: '报价单价', key: 'onePrice', width: 15 },
+		{ header: '报价总价', key: 'totalPrice', width: 15 },
+		{ header: '报价时间', key: 'priceTime', width: 20 },
+		{ header: 'URL', key: 'url', width: 80 }
+	];
+	excel.addWorksheet('网上竞价', tableHeader, data);
+	return new Promise((resolve, reject) => {
+		const file = path.join(filePath, Date.now() + '.xlsx' );
+		excel.save( file , () => {
+			log.success(`已成功保存至 -> ${file}` );
+			resolve();
+		});
+	});
+}
+
 
 co(function* () {
 
@@ -139,6 +183,7 @@ co(function* () {
 
 	const cateData = {
 		'计算机设备' : [177,178],
+		'网上竞价' : true,
 		'服务器' : [ 174 ],
 		'交换机' : [ 175 ],
 		'网络设备' : [162,167,163,168],
@@ -164,10 +209,12 @@ co(function* () {
 
 	if(answers.use === choices[0]){
 		yield exportComputer([177,178]);
-		return;
+	}else if(answers.use === choices[1]){
+		yield exportNotice();
+	}else {
+		yield exportOther(cateData[answers.use]);
 	}
 
-	yield  exportOther(cateData[answers.use]);
 
 
 }).catch((e) => {
