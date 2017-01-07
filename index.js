@@ -139,16 +139,16 @@ function* exportNotice() {
 
 	log.info(`--> 开始抓取网上竞价的数据,请稍后....`);
 	//先获取总条数
-	const total = yield notice.getTotal();
+	// const total = yield notice.getTotal();
 	//再获取需要采集的url
-	const urls = yield  notice.getUrls(total);
+	// const urls = yield  notice.getUrls(total);
 	//最后再获取采集的数据
 	// const data = yield notice.getDetail(urls);
 	const data = yield notice.getDetail([
 		'http://www.gdgpo.gov.cn/show/id/40288ba958fe0fc3015948c82cae4808.html',
 		'http://www.gdgpo.gov.cn/show/id/40288ba958fe0fc3015925870dc12201.html'
 	]);
-	log.success(`--> 成功抓取网上竞价类目下的${data.length}条数据....`);
+	log.success(`--> 成功抓取网上竞价类目下${data.length}条可用数据....`);
 	const excel = new Excel();
 	const tableHeader = [
 		{ header: '标题', key: 'title', width: 70 },
@@ -163,6 +163,7 @@ function* exportNotice() {
 		{ header: '报价单价', key: 'onePrice', width: 15 },
 		{ header: '报价总价', key: 'totalPrice', width: 15 },
 		{ header: '报价时间', key: 'priceTime', width: 20 },
+		{header: '报价截止时间', key: 'closeTime', width: 20},
 		{ header: 'URL', key: 'url', width: 80 }
 	];
 	excel.addWorksheet('网上竞价', tableHeader, data);
