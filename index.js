@@ -12,6 +12,8 @@ const co = require('co');
 const path = require('path');
 const log = require('fie-log')('spider');
 const fs = require('co-fs-extra');
+const semver = require('semver');
+const spawn = require('cross-spawn');
 let request = require("co-request");
 const home = require('os-homedir')();
 const inquirer = require('inquirer');
@@ -180,6 +182,7 @@ function* exportNotice() {
 
 
 
+
 co(function* () {
 
 	log.info('欢迎使用 广东省政府采购网 爬虫系统，当前版本是: v' + pkg.version);
@@ -194,6 +197,16 @@ co(function* () {
 		}
 	}
 
+	let vResult = yield request('http://registry.npm.taobao.org/hugo-spider-zf/latest');
+	let vBody = vResult.body;
+	if(vBody){
+		const latest = JSON.parse(vBody);
+		//判断是否有更新
+		if (semver.lt(pkg.version, latest.version)) {
+			log.warn(`检测到爬虫系统有最新的版本${latest.version}, 开始自动更新，更新完毕后请重新运行`);
+			spawn.sync('npm', ['install',  pkg.name ,'-g', '--registry=https://registry.npm.taobao.org'], { stdio: 'inherit' });
+		}
+	}
 
 	console.log('\n');
 
