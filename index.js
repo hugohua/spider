@@ -89,6 +89,7 @@ function* exportComputer(cate) {
 		{ header: '硬盘大小', key: 'disk', width: 15 },
 		{ header: '操作系统', key: 'system', width: 15 },
 		{ header: '显示器', key: 'display', width: 15 },
+		{ header: '售后服务', key: 'services', width: 15 },
 		{ header: '电商平台', key: 'platform', width: 20 },
 		{ header: '序号', key: 'buyingNum', width: 15 },
 		{ header: '采购单位', key: 'buyingUnit', width: 20 },
