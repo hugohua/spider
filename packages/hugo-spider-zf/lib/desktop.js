@@ -62,6 +62,7 @@ class Rules {
 	 * 获取型号
 	 */
   getType() {
+
     if (this.type) return;
 
     let i = 0;
@@ -73,6 +74,7 @@ class Rules {
         this.type = val.replace('台式电脑', '');
         this.assets = _.without(this.assets, val);
       } else if (val.toLowerCase() === 'optiplex') {
+
         // 戴尔的标题如果有独立匹配到OptiPlex,则后面的2个属于型号
         this.type = `${val} ${this.assets[i + 1]} ${this.assets[i + 2]}`;
       } else if (this.brand === '华硕') {
@@ -130,10 +132,11 @@ class Rules {
       }
       i+=1;
     }
+    
 
 		//戴尔的格式一般是cpu前面那串
     if( this.brand === '戴尔' && this.cpu && cpuIdx){
-      this.type = this.type + this.assets.slice(0,cpuIdx).join(' ');
+      this.type = this.type + ' ' + this.assets.slice(0,cpuIdx).join(' ');
     }
 
   }
@@ -145,7 +148,12 @@ class Rules {
   getGpu() {
 		// cpu的格式一般为 i 开通 跟着数字 和 -
     for (const val of this.assets) {
-      if ((val.indexOf('独') !== -1 || val.indexOf('集') !== -1) && val.indexOf('显') !== -1) {
+      if (
+        //独显或集显
+        ((val.indexOf('独') !== -1 || val.indexOf('集') !== -1) && val.indexOf('显') !== -1) ||
+        //显卡
+        val.indexOf('显卡') !== -1
+      ) {
         this.gpu = val;
         this.assets = _.without(this.assets, val);
       }
@@ -219,23 +227,45 @@ class Rules {
     const match = title.match(/.?年上门/);
     if(match && match.length){
       this.services = match[0];
+    }else{
+			// 如果没有匹配到上门，则直接匹配保修
+			for (const val of this.assets) {
+				if (val.indexOf('保修') !== -1) {
+				  this.services = val;
+					// this.services = val.replace(/保修|：/g,'');
+				}
+			}
     }
   }
 
   init(title) {
 		// 把特殊字符去掉,如:()
     title = title.replace(/（|\(|）|\)|\+/g, ' ');
-    this.assets = title.split(' ');
-
-    for (const val of this.assets) {
-      if (val.indexOf('/') !== -1) {
-        const sVal = val.split('/');
-        this.assets = _.without(this.assets, val);
-        sVal.forEach((item) => {
-          this.assets.push(item);
-        });
+		const assets = title.split(' ');
+    this.assets = [];
+    for(let i =0,len = assets.length;i < len; i+=1){
+			const val = assets[i];
+			if (val.indexOf('/') !== -1) {
+				const sVal = val.split('/');
+				sVal.forEach((item,j) => {
+					this.assets.push(item);
+				});
+			}else {
+				this.assets.push(val);
       }
     }
+
+    // for(let val of this.assets){
+			// if (val && val.indexOf('/') !== -1) {
+			// 	const sVal = val.split('/');
+			// 	this.assets = _.without(this.assets, val);
+			// 	sVal.forEach((item,j) => {
+			// 		//分隔数组时，仍然需要保持之前的数组顺序，这样比较好操作
+			// 		// this.assets.splice(i + j, 0, item);
+			// 		this.assets.push(item);
+			// 	});
+			// }
+    // }
 
     debug('标题数组 = %o', this.assets);
 

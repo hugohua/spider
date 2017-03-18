@@ -1,6 +1,6 @@
 'use strict';
 
-const details = require('./details');
+const details = require('../lib/details');
 
 require('mocha-generators').install();
 
