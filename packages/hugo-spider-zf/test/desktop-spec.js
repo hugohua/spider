@@ -1,7 +1,7 @@
 'use strict';
 
-const Desktop = require('./desktop');
-const cateData = require('./178.json');
+const Desktop = require('../lib/desktop');
+const cateData = require('../data/178.json');
 
 describe('rules', () => {
   it(' 戴尔台式标题替换 ', () => {
@@ -73,24 +73,41 @@ describe('rules', () => {
   });
 
 
-  it(' 联想带括号 ', () => {
-    const data = new Desktop('联想（Lenovo）启天M4600-B032台式电脑（I3-6100/H110/4G/500G/DVDRW/集成显卡/DOS)五年上门保修+19.5宽屏');
+	it(' 联想带括号 ', () => {
+		const data = new Desktop('联想（Lenovo）启天M4600-B032台式电脑（I3-6100/H110/4G/500G/DVDRW/集成显卡/DOS)五年上门保修+19.5宽屏');
 
-    expect(data).to.be.an('object');
+		expect(data).to.be.an('object');
 
-    expect(data).to.deep.equal({
-      brand: '联想',
-      type: '启天M4600-B032台式电脑',
-      cpu: 'i3-6100',
-      gpu: '集成显卡',
-      memory: '4G',
-      disk: '500G',
-      system: 'DOS',
-      display: '19.5宽屏'
-    });
-  });
+		expect(data).to.deep.equal({
+			brand: '联想',
+			type: '启天M4600-B032台式电脑',
+			cpu: 'i3-6100',
+			gpu: '集成显卡',
+			memory: '4G',
+			disk: '500G',
+			system: 'DOS',
+			display: '19.5宽屏'
+		});
+	});
 
-  it.only('全类目处理测试', () => {
+	it.only(' 提取显卡信息 ', () => {
+		const data = new Desktop('联想台式电脑 ThinkCentre M8600t-D155 i7-6700 16G 128G+2T DVDRW 2G显卡 Win7Pro64 23寸显示器 （保修：主机5年，显示器3年）');
+
+		expect(data).to.be.an('object');
+
+		expect(data).to.deep.equal({
+			brand: '联想',
+			type: '启天M4600-B032台式电脑',
+			cpu: 'i3-6100',
+			gpu: '集成显卡',
+			memory: '4G',
+			disk: '500G',
+			system: 'DOS',
+			display: '19.5宽屏'
+		});
+	});
+
+  it('全类目处理测试', () => {
     cateData.forEach((item) => {
       console.log(item.title);
       console.log(item.url);
