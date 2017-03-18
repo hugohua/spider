@@ -1,6 +1,6 @@
 'use strict';
 
-const Excel = require('../lib/excel');
+const Excel = require('./excel');
 
 describe('excel', () => {
   it('保存文件', (done) => {

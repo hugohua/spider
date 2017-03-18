@@ -3,9 +3,9 @@ coverage
 # eslint reports
 eslint.json
 # coverage dir
-coverage
+packages/hugo-spider-zf/coverage
 # eslint reports
 eslint.json
 node_modules
 npm-debug.log
-data/noticeCache.json
+packages/hugo-spider-zf/data/noticeCache.json

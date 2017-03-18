@@ -1,7 +1,7 @@
 'use strict';
 
-const Desktop = require('../lib/desktop');
-const cateData = require('../data/178.json');
+const Desktop = require('./desktop');
+const cateData = require('./178.json');
 
 describe('rules', () => {
   it(' 戴尔台式标题替换 ', () => {

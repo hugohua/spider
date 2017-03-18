@@ -1,6 +1,6 @@
 'use strict';
 
-const notice = require('../lib/notice');
+const notice = require('./notice');
 
 require('mocha-generators').install();
 
