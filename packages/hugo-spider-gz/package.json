@@ -1,0 +1,53 @@
+{
+  "name": "hugo-spider-gz",
+  "version": "0.0.1",
+  "description": "广东政府采购爬虫",
+  "main": "index.js",
+  "bin": {
+    "bi": "./bin/bi.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "istanbul cover _mocha -- --timeout 20000 --opts test/mocha.opts 'test/**/*-spec.js'",
+    "test:watch": "istanbul cover _mocha -- -w --opts test/mocha.opts 'test/**/*-spec.js'",
+    "test:one": "istanbul cover _mocha --  --timeout 20000 --opts test/mocha.opts",
+    "lint": "./node_modules/eslint/bin/eslint.js --fix ./",
+    "ci-eslint": "./node_modules/.bin/eslint -o eslint.json -f json ./",
+    "ci-log:eslint": "./node_modules/.bin/ci-log -r eslint -p ./eslint.json"
+  },
+  "author": "hugohua",
+  "license": "ISC",
+  "dependencies": {
+    "co": "^4.6.0",
+    "co-fs-extra": "^1.2.1",
+    "co-request": "^1.0.0",
+    "crawler": "^1.0.1",
+    "cross-spawn": "^5.0.1",
+    "debug": "^2.3.3",
+    "exceljs": "^0.2.37",
+    "fie-log": "^1.3.1",
+    "htmltidy": "^0.0.6",
+    "inquirer": "^2.0.0",
+    "lodash": "^4.17.2",
+    "log": "^1.4.0",
+    "open": "^0.0.5",
+    "os-homedir": "^1.0.2",
+    "request": "^2.79.0",
+    "semver": "^5.3.0"
+  },
+  "devDependencies": {
+    "@ali/ci-log": "~0.1.2",
+    "chai": "^3.5.0",
+    "eslint": "^3.8.1",
+    "eslint-config-ais": "0.0.16",
+    "eslint-plugin-import": "^1.12.0",
+    "eslint-plugin-jsx-a11y": "^1.2.0",
+    "eslint-plugin-react": "^6.3.0",
+    "istanbul": "^0.4.4",
+    "mocha": "^3.1.2",
+    "mocha-bamboo-reporter": "^1.1.1",
+    "mocha-generators": "^1.2.0",
+    "sinon": "^1.17.4",
+    "supertest": "^2.0.1"
+  }
+}

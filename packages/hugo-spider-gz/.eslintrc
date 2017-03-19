@@ -1,0 +1,18 @@
+{
+  "extends": "eslint-config-ais/es6",
+  "globals": {
+    "it": true,
+    "describe": true,
+    "require": true,
+    "process": true,
+    "before": true,
+    "after": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "expect": true
+  },
+  "rules": {
+    "strict": "off",
+    "no-tabs" : "off"
+  }
+}

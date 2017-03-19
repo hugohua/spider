@@ -57,40 +57,39 @@ function getTradingRecord($tr) {
 }
 
 /**
- * 采集类目下所有商品数据
+ * 采集商品详细信息
  * @param urls
  * @returns {Promise}
  */
 function* getDetail(urls) {
-  // const total = urls.length;
   // let num = 0;
   const data = [];
 	let num = 0;
 	let total = urls.length;
 
-  function handleDone($tr,obj,$,done){
-
-  	if($tr.length < 2){
-  		//无成交记录的情况
-			const newObj = Object.assign({},obj,
-				getTradingRecord(),{
-					buyingPrice : obj.buyingPrice
-				});
-			data.push(newObj);
-			log.debug('单条数据为: %o', newObj);
-		}else {
-			$tr.each((idx, tr) => {
-				if (idx === 0) return;
-
-				const newObj = Object.assign({},obj,
-					getTradingRecord($(tr)));
-				data.push(newObj);
-				log.debug('单条数据为: %o', newObj);
-			});
-		}
-		num+=1;
-		done();
-  }
+  // function handleDone($tr,obj,$,done){
+	//
+  // 	if($tr.length < 2){
+  // 		//无成交记录的情况
+		// 	//单独抓取一下价格
+		// 	obj.buyingPrice = $('.good_if .attribute .gs .bw_min_price').text();
+		// 	const newObj = Object.assign({},obj,
+		// 		getTradingRecord());
+		// 	data.push(newObj);
+		// 	log.debug('单条数据为: %o', newObj);
+		// }else {
+		// 	$tr.each((idx, tr) => {
+		// 		if (idx === 0) return;
+	//
+		// 		const newObj = Object.assign({},obj,
+		// 			getTradingRecord($(tr)));
+		// 		data.push(newObj);
+		// 		log.debug('单条数据为: %o', newObj);
+		// 	});
+		// }
+		// // num+=1;
+		// done();
+  // }
 
 
 
@@ -124,13 +123,21 @@ function* getDetail(urls) {
 						const $ = res.$;
 						const url = res.options.uri;
 						// 商品名称
-						const title = $('.goods_particulars h1').text();
-						// 电商平台
-						const platform = $('.good_if .gs input').attr('value');
+						const title = $('.goodsdetail_left h1 #product_name').text().trim();
+						// 电商平台，如果是一个选择框，则用右边的数据
+						// 不能直接使用右边数据是因为右边有截断的可能
+						let platform;
+						const $gs = $('.good_if .attribute').eq(3);
+
+						if( $gs.find('input.territory').length ){
+							platform = $('.othermerchants .othor_prices .tl a font').text()
+						}else {
+							platform = $gs.find('.gs').text().trim();
+						}
 						// 累计采购金额
-						const totalPrice = $('.cumulativeamount').text();
+						const totalPrice = $('.cumulativeamount').text().trim();
 						//类目
-						const cate = $('.breadmain a').eq(1).text();
+						const cate = $('.crumbs a').eq(1).text();
 						// 单条完整数据
 						const obj = {
 							title,
@@ -140,47 +147,35 @@ function* getDetail(urls) {
 						};
 						log.success(`[${num}/${total}] [${cate}][${ new Date().toLocaleTimeString() }] 采集商品成功 : ${title} --> ${url}`);
 						// 处理成交记录
-						const $tr = $('#tagContent3 table tr');
+						const $tr = $('#con_three_3 table tr');
 						// 如果没有成交记录的话,则只有一行
-						if ($tr.length < 2) {
-							// 没有成交记录
-							log.warn(`${title} -> 没有成交记录,开始单独抓取价格.`);
+						if($tr.length < 2){
+							//无成交记录的情况
+							//单独抓取一下价格
+							const buyingPrice = $('.othermerchants .othor_prices .tc span').text();
 
-							const match = url.match(/p_id=(\d+)/);
-							if (match && match.length) {
-							// if(false){
-								const id = match[1];
-								const priceUrl = `http://112.74.98.194/products/${id}/get_commodity_prices`;
-								request.post({ url: priceUrl,timeout: 9000 }, (err, httpResponse, body) => {
-									try{
-										if (typeof body !== 'object') {
-											body = JSON.parse(body);
-										}
-										log.debug('抓取价格返回数据为: %o', body);
-										if (body && body.success && body.products) {
-											obj.buyingPrice = body.products[id].price_html;
-											log.info(`${title} -> 价格为 ${obj.buyingPrice}. --> ${priceUrl}`);
-											handleDone($tr,obj,$,done);
-										}else {
-											handleDone($tr,obj,$,done);
-										}
-									}catch (e){
-										log.error(`${title} 价格采集出错啦：--> ${priceUrl}`);
-										log.error(body);
-										log.error(e);
-										handleDone($tr,obj,$,done);
-									}
-
+							const newObj = Object.assign({},
+								obj,
+								getTradingRecord(),
+								{
+									buyingPrice
 								});
-							} else {
-								done();
-							}
-						} else {
-							// TODO 优化
-							handleDone($tr,obj,$,done);
+							data.push(newObj);
+							log.debug('无成交记录单条数据为: %o', newObj);
+						}else {
+							$tr.each((idx, tr) => {
+								if (idx === 0) return;
+
+								const newObj = Object.assign({},obj,
+									getTradingRecord($(tr)));
+								data.push(newObj);
+								log.debug('有成交记录单条数据为: %o', newObj);
+							});
 						}
+						num+=1;
+						done();
           }catch (e){
-						console.log('[Error] 报错啦~~~~~~~');
+						log.error('[Error] 报错啦~~~~~~~');
 						console.log(e.stack || e);
             done();
           }
