@@ -4,7 +4,9 @@
 logs
 *.log
 npm-debug.log*
-
+data/noticeCache.json
+data/noticeDetailCache.json
+data/noticeListCache.json
 # Runtime data
 pids
 *.pid

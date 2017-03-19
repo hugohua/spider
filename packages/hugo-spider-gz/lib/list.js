@@ -47,18 +47,26 @@ function* getPageSize(cate) {
           reject(error);
         } else {
           const $ = res.$;
-          const pageUrl = HOST + $('.pagination .last a').attr('href');
-          log.success(` --> 成功抓取列表页: ${pageUrl}`);
-          const match = pageUrl.match(/page=(\d+).+emall_id_eq%5D=(\d+)/);
-					// 匹配到了,则继续提取
-          if (match) {
-            const cate = match[2];
-            const times = match[1];
-            data[cate] = [];
-            for (let i = 1; i <= times; i++) {
-              data[cate].push(pageUrl.replace(/page=(\d+)/, `page=${i}`));
-            }
+					const url = res.options.uri;
+          const pagePath = $('.pagination .last a').attr('href');
+          const pageUrl = HOST + pagePath;
+
+          if(pagePath){
+						log.success(` --> 成功抓取列表页: ${pageUrl}`);
+						const match = pageUrl.match(/page=(\d+).+emall_id_eq%5D=(\d+)/);
+						// 匹配到了,则继续提取
+						if (match) {
+							const cate = match[2];
+							const times = match[1];
+							data[cate] = [];
+							for (let i = 1; i <= times; i++) {
+								data[cate].push(pageUrl.replace(/page=(\d+)/, `page=${i}`));
+							}
+						}
+          }else {
+            log.warn(` ${url} --> 列表页下没有数据`)
           }
+
         }
         done();
         num += 1;

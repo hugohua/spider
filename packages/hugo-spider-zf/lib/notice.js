@@ -348,7 +348,7 @@ function* getDetail(urls) {
 			log.info('============done==========');
 			//保存到cache文件中
 			try{
-				// fs.outputJsonSync(noticePath, cacheData );
+				fs.outputJsonSync(noticePath, cacheData );
 			}catch (e){
 			}
 			resolve(data);

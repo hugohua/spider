@@ -1,7 +1,6 @@
 'use strict';
 
 const Desktop = require('../lib/desktop');
-const cateData = require('../data/178.json');
 
 describe('desktop', () => {
   it(' 戴尔台式标题替换 ', () => {
@@ -129,18 +128,4 @@ describe('desktop', () => {
 
 
 
-  it('全类目处理测试', () => {
-    cateData.forEach((item) => {
-      const data = new Desktop(item.title);
-      expect(data).to.be.an('object');
-      // expect(data.brand).to.not.equal('');
-      // expect(data.type).to.not.equal('');
-      // expect(data.cpu).to.not.equal('');
-      // expect(data.gpu).to.not.equal('');
-      // expect(data.memory).to.not.equal('');
-      // expect(data.disk).to.not.equal('');
-      // expect(data.system).to.not.equal('');
-      // expect(data.display).to.not.equal('');
-    });
-  });
 });

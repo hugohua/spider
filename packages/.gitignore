@@ -1,11 +1,13 @@
 # coverage dir
-hugo-spider-zf/coverage
+packages/hugo-spider-gz/coverage
+hugo-spider-gz/coverage
 # eslint reports
-eslint.json
 # coverage dir
 packages/hugo-spider-zf/coverage
 # eslint reports
-eslint.json
 node_modules
 npm-debug.log
 packages/hugo-spider-zf/data/noticeCache.json
+packages/hugo-spider-gz/data/noticeDetailCache.json
+packages/hugo-spider-gz/data/noticeListCache.json
+

@@ -143,10 +143,12 @@ function* exportComputer(cate) {
 function* exportNotice() {
 
 	log.info(`--> 开始抓取网上竞价的数据,请稍后....`);
-	//先获取总条数
-	const total = yield notice.getTotal();
+	const listArr = yield notice.getPageSize();
 	//再获取需要采集的url
-	const urls = yield  notice.getUrls(total);
+	const urls = yield  notice.getDetailsUrl(listArr);
+
+
+
 	//最后再获取采集的数据
 	const data = yield notice.getDetail(urls);
 	// const data = yield notice.getDetail([
@@ -155,20 +157,23 @@ function* exportNotice() {
 	// ]);
 	log.success(`--> 成功抓取网上竞价类目下${data.length}条可用数据....`);
 	const excel = new Excel();
+	//标题
 	const tableHeader = [
 		{ header: '标题', key: 'title', width: 70 },
-		{ header: '采购类目', key: 'cate', width: 20 },
-		{ header: '竞价编号', key: 'priceNum', width: 20 },
-		{ header: '采购单位', key: 'buyingUnit', width: 30 },
-		{ header: '供应商名称', key: 'suppliersName', width: 30 },
-		{ header: '商品名称', key: 'goodsName', width: 30 },
-		{ header: '品牌', key: 'brand', width: 15 },
-		{ header: '型号', key: 'type', width: 30 },
-		{ header: '数量', key: 'number', width: 15 },
-		{ header: '报价单价', key: 'onePrice', width: 15 },
-		{ header: '报价总价', key: 'totalPrice', width: 15 },
-		{ header: '报价时间', key: 'priceTime', width: 20 },
-		{header: '报价截止时间', key: 'closeTime', width: 20},
+		{ header: '采购单位', key: 'buyingUnit', width: 20 },
+		{ header: '项目编号', key: 'projectNum', width: 20 },
+		{ header: '采购内容', key: 'buyingContent', width: 30 },
+		{ header: '成交供应商确定日期', key: 'doneTime', width: 30 },
+		{ header: '本项目采购文件发出日期', key: 'sendTime', width: 30 },
+		{ header: '成交供应商名称', key: 'suppliersName', width: 15 },
+		{ header: '地址', key: 'suppliersAddress', width: 30 },
+		{ header: '成交金额', key: 'donePrice', width: 15 },
+		{ header: '成交服务费', key: 'servicesPrice', width: 15 },
+		{ header: '采购预算（最高限价）', key: 'prePrice', width: 15 },
+		{ header: '联系人', key: 'contact', width: 20 },
+		{ header: '单位地址', key: 'buyingAddress', width: 30},
+		{ header: '联系电话', key: 'buyingPhone', width: 20},
+		{ header: '传真', key: 'buyingFax', width: 20},
 		{ header: 'URL', key: 'url', width: 80 }
 	];
 	excel.addWorksheet('网上竞价', tableHeader, data);
@@ -217,19 +222,67 @@ co(function* () {
 	const cateData = {
 		'台式机/笔记本' : [294,295],
 		'网上竞价' : true,
+		'separator-强制节能品目' : true,
 		'平板式微型计算机/掌上电脑' : [306,353],
 		'普通空调/空调机/制冷设备' : [ 120,362,348 ],
 		'激光打印机/A3激光打印机/针式打印机' : [ 296,313,315 ],
-		'液晶显示器/普通照明用自镇流荧光灯/普通照明用双端荧光灯/电视设备/视频监控设备中的数字硬盘录像机/监控电视墙' : [307,349,350,117,351,352]
-
+		'液晶显示器/普通照明用自镇流荧光灯/普通照明用双端荧光灯/电视设备/视频监控设备中的数字硬盘录像机/监控电视墙' : [307,349,350,117,351,352],
+		//其他集中采购品目
+		'separator-其他集中采购品目' : true,
+		'计算机网络设备/计算机安全设备/磁盘阵列' : [286,319,318],
+		'移动存储设备/移动硬盘/喷墨式打印机/打印设备' : [214,215,314,316],
+		'显示设备/扫描仪' : [355,308],
+		'计算机软件/复印机' : [321,403],
+		'投影仪' : [309],
+		'多功能一体机' : [297],
+		'触控一体机/除湿设备/文印设备/传真机' : [311,125,344,108],
+		'销毁设备' : [112],
+		'摄影摄像器材' : [163],
+		'轿车/商务车/越野车/客车/厢式专用汽车/摩托车' : [363,365,364,341,366,367],
+		'图书档案装具/电梯' : [105,357],
+		'电冰箱/空气调节电器/洗衣机' : [118,304,119],
+		'照明设备/视频会议系统设备/执法船艇/办公家具' : [149,194,358,336],
+		'宿舍家具/教学家具/厨卫用具/制服' : [332,337,359,360],
+		//办公电器
+		'separator-办公电器' : true,
+		'电吹风/料理机/榨汁机/咖啡机/养生壶/电水壶' : [154,155,156,157,158,159],
+		'电磁炉/吸尘器/净化器/饮水机/冷或暖风机/热水器' : [160,124,322,132,323,137],
+		'电风扇/空调扇/取暖器/微波炉/饮料加工机/其他电器' : [139,161,140,141,142,126],
+		//办公设备
+		'separator-办公设备' : true,
+		'影音电子/其他办公设备/电话机/其他货物' : [178,122,106,368],
+		'数码配件' : [192],
+		'其他调节设备' : [305],
+		//文具耗材
+		'separator-文具耗材' : true,
+		'硒鼓墨盒' : [111],
+		'办公文具' : [201],
+		'复印纸/打印纸/生活用纸' : [199,200,326],
+		//食品类
+		'separator-食品类' : true,
+		'饮料冲调/粮油干货/饮料饮品/冲调饮品/休闲食品/茗茶/方便速食/厨房调料' : [133,218,226,234,134,135,262,132],
+		//通信设备
+		'separator-通信设备' : true,
+		'电池/移动电源/网络设备/通讯配件/移动通信设备/电话通信设备/其他通信设备/对讲机及配件/蓝牙耳机' : [283,285,152,114,115,127,150,151]
 	};
 
-	const choices = Object.keys(cateData);
+	let choices = Object.keys(cateData);
+
+	choices = choices.map( (item,i) => {
+
+		if(item.indexOf('separator') !== -1){
+			return new inquirer.Separator()
+		}else {
+			return `${i}) ${item}`
+		}
+
+	} );
 
 	const answers = yield inquirer.prompt([
 		{
 			type: 'list',
 			name: 'use',
+			pageSize : 50,
 			message: '请选择你要采集的数据。',
 			choices: choices
 		}
@@ -240,7 +293,9 @@ co(function* () {
 	}else if(answers.use === choices[1]){
 		yield exportNotice();
 	}else {
-		yield exportOther(cateData[answers.use]);
+		const use = answers.use.replace(/\d+\) /,'');
+
+		yield exportOther(cateData[use]);
 	}
 
 

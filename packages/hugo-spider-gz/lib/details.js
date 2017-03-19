@@ -67,32 +67,6 @@ function* getDetail(urls) {
 	let num = 0;
 	let total = urls.length;
 
-  // function handleDone($tr,obj,$,done){
-	//
-  // 	if($tr.length < 2){
-  // 		//无成交记录的情况
-		// 	//单独抓取一下价格
-		// 	obj.buyingPrice = $('.good_if .attribute .gs .bw_min_price').text();
-		// 	const newObj = Object.assign({},obj,
-		// 		getTradingRecord());
-		// 	data.push(newObj);
-		// 	log.debug('单条数据为: %o', newObj);
-		// }else {
-		// 	$tr.each((idx, tr) => {
-		// 		if (idx === 0) return;
-	//
-		// 		const newObj = Object.assign({},obj,
-		// 			getTradingRecord($(tr)));
-		// 		data.push(newObj);
-		// 		log.debug('单条数据为: %o', newObj);
-		// 	});
-		// }
-		// // num+=1;
-		// done();
-  // }
-
-
-
   return new Promise((resolve, reject) => {
     const c = new Crawler({
 			// 并发数
