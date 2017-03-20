@@ -282,7 +282,7 @@ co(function* () {
 		{
 			type: 'list',
 			name: 'use',
-			pageSize : 50,
+			pageSize : 30,
 			message: '请选择你要采集的数据。',
 			choices: choices
 		}
