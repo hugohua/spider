@@ -25,6 +25,8 @@ function getTradingRecord($tr) {
   let	buyQuantity = '';
 	// 单价
   let	buyingPrice = '';
+  // 总价
+	let buyingTotalPrice = '';
 	// 电商
   let	buyingUser = '';
 	// 下单日期
@@ -37,9 +39,12 @@ function getTradingRecord($tr) {
 			buyingNum = $td.eq(0).text();
 			buyingUnit = $td.eq(1).text();
 			buyQuantity = $td.eq(2).text();
-			buyingPrice = $td.eq(3).text();
+			buyingTotalPrice = $td.eq(3).text();
 			buyingUser = $td.eq(4).text();
 			buyingDate = $td.eq(5).text();
+			//单价为总价除以数量
+			buyingPrice = parseFloat(buyingTotalPrice.replace(/¥|,/g,'')) / parseInt(buyQuantity,10);
+
 		}
 	}
 
@@ -49,6 +54,7 @@ function getTradingRecord($tr) {
     buyingUnit,
     buyQuantity,
     buyingPrice,
+		buyingTotalPrice,
     buyingUser,
     buyingDate
   };
