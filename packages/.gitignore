@@ -1,9 +1,9 @@
 # coverage dir
 packages/hugo-spider-gz/coverage
-hugo-spider-gz/coverage
+packages/hugo-spider-zf/coverage
+coverage
 # eslint reports
 # coverage dir
-packages/hugo-spider-zf/coverage
 # eslint reports
 node_modules
 npm-debug.log

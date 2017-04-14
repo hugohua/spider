@@ -10,7 +10,7 @@ const co = require('co');
 const fs = require('co-fs-extra');
 const path = require('path');
 const config = require('./config');
-const log = require('fie-log')('spider');
+const log = require('./log');
 
 const HOST = 'http://112.74.98.194';
 const urls = [];

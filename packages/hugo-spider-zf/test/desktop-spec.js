@@ -109,7 +109,7 @@ describe('rules', () => {
 			disk: '2T',
 			system: 'Win7Pro64',
 			display: '23寸显示器',
-			services:"主机5年，显示器3年"
+			services:"保修：主机5年，显示器3年"
 		});
 	});
 

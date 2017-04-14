@@ -10,7 +10,6 @@
 
 const co = require('co');
 const path = require('path');
-const log = require('fie-log')('spider');
 const fs = require('co-fs-extra');
 const semver = require('semver');
 const spawn = require('cross-spawn');
@@ -23,12 +22,12 @@ const Desktop = require('./lib/desktop');
 const config = require('./lib/config');
 const list = require('./lib/list');
 const notice = require('./lib/notice');
+const log = require('./lib/log');
 const pkg = require('./package.json');
 
 
 let urls = [];
 const filePath = path.join(home,'spider');
-
 
 /**
  * 导出通用类目
@@ -62,7 +61,7 @@ function* exportOther(cate) {
 	}
 
   return new Promise((resolve, reject) => {
-		const file = path.join(filePath, Date.now() + '.xlsx' );
+		const file = path.join(filePath, log.fileName + '.xlsx' );
 		excel.save( file , () => {
 			log.success(`已成功保存至 -> ${file}` );
 			resolve();
@@ -104,7 +103,27 @@ function* exportComputer(cate) {
 
 	//debug
 	// let data = yield details.get([
-	// 	'http://112.74.98.194/commodities/24141?p_id=25473'
+	// 	"http://112.74.98.194/commodities/36463?p_id=40024&target=_blank",
+	// 	"http://112.74.98.194/commodities/38399?p_id=42328&target=_blank",
+	// 	"http://112.74.98.194/commodities/35200?p_id=38489&target=_blank",
+	// 	"http://112.74.98.194/commodities/35714?p_id=39257&target=_blank",
+	// 	"http://112.74.98.194/commodities/36464?p_id=40025&target=_blank",
+	// 	"http://112.74.98.194/commodities/38400?p_id=42329&target=_blank",
+	// 	"http://112.74.98.194/commodities/38728?p_id=42585&target=_blank",
+	// 	"http://112.74.98.194/commodities/42139?p_id=46169&target=_blank",
+	// 	"http://112.74.98.194/commodities/35715?p_id=39258&target=_blank",
+	// 	"http://112.74.98.194/commodities/35201?p_id=38490&target=_blank",
+	// 	"http://112.74.98.194/commodities/38401?p_id=42330&target=_blank",
+	// 	"http://112.74.98.194/commodities/35202?p_id=38491&target=_blank",
+	// 	"http://112.74.98.194/commodities/35716?p_id=39259&target=_blank",
+	// 	"http://112.74.98.194/commodities/40901?p_id=45403&target=_blank",
+	// 	"http://112.74.98.194/commodities/35717?p_id=39260&target=_blank",
+	// 	"http://112.74.98.194/commodities/35718?p_id=39261&target=_blank",
+	// 	"http://112.74.98.194/commodities/35203?p_id=38494&target=_blank",
+	// 	"http://112.74.98.194/commodities/35719?p_id=39262&target=_blank",
+	// 	"http://112.74.98.194/commodities/36469?p_id=40030&target=_blank",
+	// 	"http://112.74.98.194/commodities/38733?p_id=42590&target=_blank",
+	// 	"http://112.74.98.194/commodities/35720?p_id=39263&target=_blank"
 	// ]);
 	// data = data.map( item => {
 	// 	const d = new Desktop(item.title);
@@ -128,7 +147,7 @@ function* exportComputer(cate) {
 	}
 
 	return new Promise((resolve, reject) => {
-		const file = path.join(filePath, Date.now() + '.xlsx' );
+		const file = path.join(filePath, log.fileName + '.xlsx' );
 		excel.save( file , () => {
 			log.success(`已成功保存至 -> ${file}` )
 			resolve();
@@ -173,7 +192,7 @@ function* exportNotice() {
 	];
 	excel.addWorksheet('网上竞价', tableHeader, data);
 	return new Promise((resolve, reject) => {
-		const file = path.join(filePath, Date.now() + '.xlsx' );
+		const file = path.join(filePath, log.fileName + '.xlsx' );
 		excel.save( file , () => {
 			log.success(`已成功保存至 -> ${file}` );
 			resolve();

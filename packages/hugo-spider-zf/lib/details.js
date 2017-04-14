@@ -7,7 +7,7 @@
 
 
 const Crawler = require('crawler');
-const log = require('fie-log')('spider');
+const log = require('./log');
 const request = require('request');
 const config = require('./config');
 
@@ -138,6 +138,11 @@ function* getDetail(urls) {
 							totalPrice,
 							url
 						};
+
+						if(!title){
+							log.error(`采集商品出错，没有标题 : ${title} --> ${url}`)
+						}
+
 						log.success(`[${num}/${total}] [${cate}][${ new Date().toLocaleTimeString() }] 采集商品成功 : ${title} --> ${url}`);
 						// 处理成交记录
 						const $tr = $('#tagContent3 table tr');
