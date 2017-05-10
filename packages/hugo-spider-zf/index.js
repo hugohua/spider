@@ -13,7 +13,8 @@ const path = require('path');
 const fs = require('co-fs-extra');
 const semver = require('semver');
 const spawn = require('cross-spawn');
-let request = require("co-request");
+const request = require("co-request");
+const argv = require('yargs').argv;
 const home = require('os-homedir')();
 const inquirer = require('inquirer');
 const Excel = require('./lib/excel');
@@ -206,7 +207,7 @@ function* exportNotice() {
 co(function* () {
 
 	log.info('欢迎使用 广东省政府采购网 爬虫系统，当前版本是: v' + pkg.version);
-
+	let answers = {};
 	let result = yield request('http://www.ghugo.com/abc.txt');
 	let body = result.body;
 	if(body){
@@ -254,14 +255,20 @@ co(function* () {
 
 	const choices = Object.keys(cateData);
 
-	const answers = yield inquirer.prompt([
-		{
-			type: 'list',
-			name: 'use',
-			message: '请选择你要采集的数据。',
-			choices: choices
-		}
-	]);
+	if(argv.type){
+		answers.use = argv.type;
+	}else {
+		answers = yield inquirer.prompt([
+			{
+				type: 'list',
+				name: 'use',
+				message: '请选择你要采集的数据。',
+				choices: choices
+			}
+		]);
+	}
+
+
 
 	if(answers.use === choices[0]){
 		yield exportComputer([177,178]);

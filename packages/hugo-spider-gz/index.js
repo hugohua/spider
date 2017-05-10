@@ -11,6 +11,8 @@ const co = require('co');
 const path = require('path');
 const log = require('fie-log')('spider');
 const fs = require('co-fs-extra');
+const argv = require('yargs').argv;
+
 const semver = require('semver');
 const spawn = require('cross-spawn');
 let request = require("co-request");
@@ -193,7 +195,7 @@ function* exportNotice() {
 co(function* () {
 
 	log.info('欢迎使用 广州公共资源电子商城 爬虫系统，当前版本是: v' + pkg.version);
-
+	let answers = {};
 	let result = yield request('http://www.ghugo.com/abc.txt');
 	let body = result.body;
 	if(body){
@@ -219,6 +221,9 @@ co(function* () {
 
 
 	yield fs.mkdirs( filePath );
+	
+	console.log(argv);
+	
 
 	const cateData = {
 		'台式机/笔记本' : [294,295],
@@ -268,12 +273,24 @@ co(function* () {
 		'separator-通信设备' : true,
 		'通信设备分类' : [283,285,152,114,115,127,150,151],
 		'separator-所有分类' : true,
-		'除网上竞价外的所有分类1': [294,295,306,353,120,362,348,296,313,315,307,
-			117,351,352,286,319,318,214,215,314,316,355
+		'除网上竞价外的所有分类1': [294,295,306,353,120,362
 		],
-		'除网上竞价外的所有分类2': [308,321,403,309,297,311,125,344,108,112,163,
-			178,122,106,368,192,305,111,201,199,200,326,
-			283,285,152,114,115,127,150,151
+		'除网上竞价外的所有分类2': [348,296,313,315,307,
+			117,351,352
+		],
+		'除网上竞价外的所有分类3': [286,319,318,214,215,314,316,355
+		],
+		'除网上竞价外的所有分类4': [308,321,403,309,297,311
+		],
+		'除网上竞价外的所有分类5': [125,344,108,112,163,
+			178
+		],
+		'除网上竞价外的所有分类6': [122,106,368,192,305
+		],
+		'除网上竞价外的所有分类7': [111,201,199,200,326,
+			283
+		],
+		'除网上竞价外的所有分类8': [285,152,114,115,127,150,151
 		],
 
 	};
@@ -290,15 +307,21 @@ co(function* () {
 
 	} );
 
-	const answers = yield inquirer.prompt([
-		{
-			type: 'list',
-			name: 'use',
-			// pageSize : 30,
-			message: '请选择你要采集的数据。',
-			choices: choices
-		}
-	]);
+	//说明是直接输入了type，那么则省去选择
+	if(argv.type){
+		answers.use = argv.type
+	}else {
+		answers = yield inquirer.prompt([
+			{
+				type: 'list',
+				name: 'use',
+				// pageSize : 30,
+				message: '请选择你要采集的数据。',
+				choices: choices
+			}
+		]);
+	}
+
 
 	if(answers.use === choices[0]){
 		yield exportComputer([294,295]);
@@ -306,7 +329,6 @@ co(function* () {
 		yield exportNotice();
 	}else {
 		const use = answers.use.replace(/\d+\) /,'');
-
 		yield exportOther(cateData[use]);
 	}
 
