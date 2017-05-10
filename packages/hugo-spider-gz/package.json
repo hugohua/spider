@@ -1,6 +1,6 @@
 {
   "name": "hugo-spider-gz",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "广东政府采购爬虫",
   "main": "index.js",
   "bin": {
