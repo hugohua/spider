@@ -222,8 +222,6 @@ co(function* () {
 
 	yield fs.mkdirs( filePath );
 	
-	console.log(argv);
-	
 
 	const cateData = {
 		'台式机/笔记本' : [294,295],
