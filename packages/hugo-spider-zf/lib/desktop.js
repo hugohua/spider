@@ -98,7 +98,7 @@ class Rules {
 					this.type = match2[0];
 					this.assets = _.without(this.assets, val);
 				}
-			} else if (this.brand === '宏基') {
+			} else if (this.brand === '宏基' && this.assets[3]) {
 				const match3 = this.assets[3].match(/\d+/);
 				let num;
 				if (match3) {
