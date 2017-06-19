@@ -53,7 +53,7 @@ function* getPageSize(cate) {
 
           if(pagePath){
 						log.success(` --> 成功抓取列表页: ${pageUrl}`);
-						const match = pageUrl.match(/page=(\d+).+emall_id_eq%5D=(\d+)/);
+						const match = pageUrl.match(/page=(\d+).+catalog_id_eq%5D=(\d+)/);
 						// 匹配到了,则继续提取
 						if (match) {
 							const cate = match[2];
