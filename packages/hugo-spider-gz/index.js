@@ -196,15 +196,15 @@ co(function* () {
 
 	log.info('欢迎使用 广州公共资源电子商城 爬虫系统，当前版本是: v' + pkg.version);
 	let answers = {};
-	let result = yield request('http://www.ghugo.com/abc.txt');
-	let body = result.body;
-	if(body){
-		const auto = JSON.parse(body);
-		if(!auto.abc){
-			log.error('授权失败，请联系爬虫提供者..');
-			return;
-		}
-	}
+	// let result = yield request('http://www.ghugo.com/abc.txt');
+	// let body = result.body;
+	// if(body){
+	// 	const auto = JSON.parse(body);
+	// 	if(!auto.abc){
+	// 		log.error('授权失败，请联系爬虫提供者..');
+	// 		return;
+	// 	}
+	// }
 
 	let vResult = yield request('http://registry.npm.taobao.org/hugo-spider-gz/latest');
 	let vBody = vResult.body;
